@@ -1,12 +1,8 @@
 ---
 driver_plugin: vagrant
-provider: chef_zero
+provisioner: chef_zero
 
 platforms:
-- name: centos-6.4_chef-11.4.4
-  driver_config: 
-    box: opscode-centos-6.4_chef-11.4.4
-    box_url:  https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.4_chef-11.4.4.box
 - name: ubuntu-12.04_chef-11.4.4
   driver_config:
     box: opscode-ubuntu-12.04_chef-11.4.4
@@ -15,15 +11,11 @@ platforms:
 suites:
 - name: default
   run_list:
-    - recipe[ktc-etcd]
-    - recipe[ktc-utils]
+    - recipe[ktc-monitor::server_graphite]
+    - recipe[ktc-monitor::server_collectd]
+    - recipe[ktc-collectd::client_collectd]
+    - recipe[ktc-gdash::default]
   attributes:
-    authorization:
-      sudo:
-        users:
-          - 'vagrant'
-    etcd:
-      args: '-c 127.0.0.1:4001 -s 127.0.0.1:7001 -f'
-      servers:
-        - 127.0.0.1
-    ha_disabled: true
+    gdash:
+      graphite_host: "localhost"
+      monitor_client_recipe: "ktc-collectd\\:\\:client_collectd"
