@@ -24,9 +24,8 @@ namespace :test do
     desc "Run cane to check quality metrics"
     Cane::RakeTask.new(:quality) do |cane|
       canefile = ".cane"
-      cane.abc_max = 12
+      cane.abc_max = 10
       cane.abc_glob =  '{recipes,libraries,resources,providers}/**/*.rb'
-      cane.abc_exclude = %w{KTC::Attributes#set_endpoint KTC::Attributes#set_database}
       cane.no_style = true
       cane.parallel = true
     end
