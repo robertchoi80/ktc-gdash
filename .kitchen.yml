@@ -11,8 +11,10 @@ platforms:
 suites:
 - name: default
   run_list:
-    - recipe[ktc-monitor::server_graphite]
-    - recipe[ktc-monitor::server_collectd]
+    - recipe[ubuntu]
+    - recipe[graphite]
+    - recipe[collectd::server]
+    - recipe[ktc-collectd::client_graphite]
     - recipe[ktc-collectd::client_collectd]
     - recipe[ktc-gdash::default]
   attributes:
