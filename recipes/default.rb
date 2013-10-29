@@ -37,6 +37,7 @@ nodes.each do |node|
   gdash_dashboard_component 'load' do
     dashboard_name node_fqdn
     dashboard_category category_name
+    title "Load"
     fields(
       :shortterm => {
         :data => "#{node_name}.load.load.shortterm",
@@ -56,6 +57,7 @@ nodes.each do |node|
   gdash_dashboard_component 'cpu' do
     dashboard_name node_fqdn
     dashboard_category category_name
+    title "CPU"
     fields(
       :iowait => {
         :data => "averageSeries(#{node_name}.cpu.*.cpu.wait.value)",
@@ -75,6 +77,7 @@ nodes.each do |node|
   gdash_dashboard_component 'memory' do
     dashboard_name node_fqdn
     dashboard_category category_name
+    title "Memory"
     fields(
       :iowait => {
         :data => "#{node_name}.memory.memory.used.value",

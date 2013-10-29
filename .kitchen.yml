@@ -11,7 +11,7 @@ platforms:
 suites:
 - name: default
   run_list:
-    - recipe[ubuntu]
+    - recipe[ktc-testing]
     - recipe[graphite]
     - recipe[collectd::server]
     - recipe[ktc-collectd::client_graphite]
@@ -19,5 +19,5 @@ suites:
     - recipe[ktc-gdash::default]
   attributes:
     gdash:
-      graphite_host: "localhost"
+      graphite_url: "http://127.0.0.1:80"
       monitor_client_recipe: "ktc-collectd\\:\\:client_collectd"
