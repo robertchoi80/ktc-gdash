@@ -1,18 +1,14 @@
+#
 # vim: set ft=ruby:
+#
+#chef_api :config
+chef_api "https://chefdev.mkd2.ktc", node_name: "cookbook", client_key: ".cookbook.pem"
+
 site :opscode
 
 metadata
-group "other" do
-  cookbook "graphite", github: "hw-cookbooks/graphite"
-  cookbook "collectd", github: "miah/chef-collectd"
-  cookbook "gdash", github: "hw-cookbooks/gdash"
-  cookbook "ubuntu"
-end
 
-group "ktc" do
-  cookbook 'ktc-collectd', github: 'cloudware-cookbooks/ktc-collectd'
-end
-
-group "integration" do
-  cookbook 'chef-solo-search', github: 'edelight/chef-solo-search'
-end
+cookbook "ktc-testing"
+cookbook "ktc-collectd"
+cookbook "collectd"
+cookbook "graphite"
