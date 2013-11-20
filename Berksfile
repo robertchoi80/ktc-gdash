@@ -8,7 +8,9 @@ site :opscode
 
 metadata
 
-cookbook "ktc-testing"
-cookbook "ktc-collectd"
-cookbook "collectd"
-cookbook "graphite"
+group "integration" do
+  cookbook "ktc-testing"
+  cookbook "etcd"
+  cookbook "ktc-collectd"
+  cookbook "ktc-graphite"
+end
