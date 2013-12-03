@@ -3,6 +3,21 @@
 #
 
 include_recipe "partial_search"
+include_recipe "services"
+
+ruby_block "load graphite endpoint" do
+  block do
+    endpoint = Services::Endpoint.new "graphite"
+    endpoint.load
+
+    node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
+
+    system('touch /var/lock/.graphite_endpoint_loaded')
+  end
+  action :create
+  not_if "test -f /var/lock/.graphite_endpoint_loaded"
+end
+
 include_recipe "gdash::default"
 
 search_query = "recipes:#{node[:gdash][:monitor_client_recipe]}"
