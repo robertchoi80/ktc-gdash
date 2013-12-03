@@ -1,4 +1,6 @@
 #!/usr/bin/env rake
+require 'rubygems'
+require 'bundler/setup'
 require 'rake'
 require 'rspec/core/rake_task'
 
@@ -71,15 +73,13 @@ namespace :test do
 
   desc 'Run CI tests'
   task :ci do
+    system 'bundle'
+    system 'bundle exec rake test:bundle_ci'
+  end
+
+  desc 'Run Bundled tests'
+  task :bundle_ci do
     Rake::Task['test:complete'].invoke
   end
-end
 
-
-namespace :release do
-  task :update_metadata do
-  end
-
-  task :tag_release do
-  end
 end
