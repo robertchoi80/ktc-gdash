@@ -1,6 +1,6 @@
 name        "ktc-gdash"
 maintainer  "Robert Choi"
-version     "1.0.0"
+version '0.9.2'
 
 depends "gdash"
 depends "graphite"
