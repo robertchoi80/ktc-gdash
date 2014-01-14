@@ -1,8 +1,7 @@
 ---
-settings:
-  parallel: true
+driver:
+  name: vagrant
 
-driver: vagrant
 provisioner: 
   name: chef_zero
   require_chef_omnibus: latest
