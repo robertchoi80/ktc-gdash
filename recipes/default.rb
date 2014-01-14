@@ -5,18 +5,12 @@
 include_recipe "partial_search"
 include_recipe "services"
 
-ruby_block "load graphite endpoint" do
-  block do
-    endpoint = Services::Endpoint.new "graphite"
-    endpoint.load
+# Load graphite endpoint
+endpoint = Services::Endpoint.new "graphite"
+endpoint.load
 
-    node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
-
-    system('touch /var/lock/.graphite_endpoint_loaded')
-  end
-  action :create
-  not_if "test -f /var/lock/.graphite_endpoint_loaded"
-end
+# Override graphite url so that it can be written to gdash.yaml
+node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
 
 include_recipe "gdash::default"
 
