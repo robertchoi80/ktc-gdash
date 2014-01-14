@@ -75,15 +75,15 @@ nodes.each do |node|
     title "CPU"
     fields(
       :iowait => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.wait.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-wait.value)",
         :alias => 'IO Wait'
       },
       :system => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.system.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-system.value)",
         :alias => 'system'
       },
       :user => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.user.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-user.value)",
         :alias => 'user'
       }
     )
@@ -94,9 +94,9 @@ nodes.each do |node|
     dashboard_category category_name
     title "Memory"
     fields(
-      :iowait => {
-        :data => "#{node_name}.memory.memory.used.value",
-        :alias => 'memory used'
+      :used => {
+        :data => "#{node_name}.memory.memory-used.value",
+        :alias => 'used'
       }
     )
   end
