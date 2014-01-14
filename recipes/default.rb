@@ -5,18 +5,12 @@
 include_recipe "partial_search"
 include_recipe "services"
 
-ruby_block "load graphite endpoint" do
-  block do
-    endpoint = Services::Endpoint.new "graphite"
-    endpoint.load
+# Load graphite endpoint
+endpoint = Services::Endpoint.new "graphite"
+endpoint.load
 
-    node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
-
-    system('touch /var/lock/.graphite_endpoint_loaded')
-  end
-  action :create
-  not_if "test -f /var/lock/.graphite_endpoint_loaded"
-end
+# Override graphite url so that it can be written to gdash.yaml
+node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
 
 include_recipe "gdash::default"
 
@@ -75,15 +69,15 @@ nodes.each do |node|
     title "CPU"
     fields(
       :iowait => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.wait.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-wait.value)",
         :alias => 'IO Wait'
       },
       :system => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.system.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-system.value)",
         :alias => 'system'
       },
       :user => {
-        :data => "averageSeries(#{node_name}.cpu.*.cpu.user.value)",
+        :data => "averageSeries(#{node_name}.cpu-*.cpu-user.value)",
         :alias => 'user'
       }
     )
@@ -94,9 +88,9 @@ nodes.each do |node|
     dashboard_category category_name
     title "Memory"
     fields(
-      :iowait => {
-        :data => "#{node_name}.memory.memory.used.value",
-        :alias => 'memory used'
+      :used => {
+        :data => "#{node_name}.memory.memory-used.value",
+        :alias => 'used'
       }
     )
   end

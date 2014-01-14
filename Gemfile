@@ -4,7 +4,7 @@ source  'https://rubygems.org'
 gem 'berkshelf'
 
 group "develop" do
-  gem 'test-kitchen', '~> 1.0.0'
+  gem 'test-kitchen'
   gem 'kitchen-vagrant'
   gem 'kitchen-lxc'
   gem 'busser-bats'
