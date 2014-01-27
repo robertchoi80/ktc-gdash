@@ -192,7 +192,7 @@ client_nodes.each do |client|
     title client_fqdn
     ymin 0
     ymax 100
-     fields(
+    fields(
       :used => {
         :data => "asPercent(#{client_name}.memory.memory-used.value, #{client_memory_total * 1000})",
         :alias => 'used'
@@ -206,7 +206,7 @@ client_nodes.each do |client|
     title client_fqdn
     ymin 0
     ymax 100
-     fields(
+    fields(
       :root_used => {
         :data => "asPercent(#{client_name}.df-root.df_complex-used.value, #{root_vol_size * 1000})",
         :alias => 'root_used'
