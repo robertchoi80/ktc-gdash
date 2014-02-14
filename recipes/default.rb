@@ -127,7 +127,6 @@ client_nodes.each do |client|
     fields(
       :used => {
         :data => "asPercent(#{client_name}.memory.memory-used.value, #{client_memory_total * 1000})",
-#        :data => "#{client_name}.memory.memory-used.value",
         :alias => 'used'
       }
     )
@@ -142,7 +141,6 @@ client_nodes.each do |client|
     fields(
       :root_used => {
         :data => "asPercent(#{client_name}.df-root.df_complex-used.value, #{root_vol_size * 1000})",
-#        :data => "#{client_name}.df-root.df_complex-used.value",
         :alias => 'root_used'
       }
     )
