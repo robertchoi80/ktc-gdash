@@ -122,9 +122,12 @@ client_nodes.each do |client|
     dashboard_name client_fqdn
     dashboard_category category_name
     title "Memory"
+    ymin 0
+    ymax 100
     fields(
       :used => {
-        :data => "#{client_name}.memory.memory-used.value",
+        :data => "asPercent(#{client_name}.memory.memory-used.value, #{client_memory_total * 1000})",
+#        :data => "#{client_name}.memory.memory-used.value",
         :alias => 'used'
       }
     )
@@ -134,9 +137,12 @@ client_nodes.each do |client|
     dashboard_name client_fqdn
     dashboard_category category_name
     title "Filesystem"
+    ymin 0
+    ymax 100
     fields(
       :root_used => {
-        :data => "#{client_name}.df-root.df_complex-used.value",
+        :data => "asPercent(#{client_name}.df-root.df_complex-used.value, #{root_vol_size * 1000})",
+#        :data => "#{client_name}.df-root.df_complex-used.value",
         :alias => 'root_used'
       }
     )
