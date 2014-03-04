@@ -3,17 +3,18 @@
 # Recipe:: default
 #
 
-include_recipe "partial_search"
-include_recipe "services"
+include_recipe 'partial_search'
+include_recipe 'services'
 
 # Load graphite endpoint
-endpoint = Services::Endpoint.new "graphite"
+endpoint = Services::Endpoint.new 'graphite'
 endpoint.load
 
 # Override graphite url so that it can be written to gdash.yaml
-node.set[:gdash][:graphite_url] = "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
+node.set[:gdash][:graphite_url] =
+  "http://#{endpoint.ip}:#{node[:graphite][:listen_port]}"
 
-include_recipe "gdash::default"
+include_recipe 'gdash::default'
 
 # Search all nodes that runs ktc-monitor::client
 search_query = "recipes:#{node[:gdash][:monitor_client_recipe]}"
@@ -42,7 +43,7 @@ client_nodes.each do |client|
 
   # Get root volume size from node attribute
   client['filesystem'].each do |fs, value|
-    if fs.include? "root" and not fs.eql?("rootfs")
+    if fs.include?('root') && !fs.eql?('rootfs')
       root_vol_size = value['kb_size'].to_i
       Chef::Log.debug("Root volume found. Size: #{root_vol_size}")
     end
@@ -52,13 +53,13 @@ client_nodes.each do |client|
   client_name = client_fqdn.gsub(/\./, '_')
   Chef::Log.info "Creating entry #{client_fqdn}..."
 
-  if client_fqdn.start_with?("cnode")
+  if client_fqdn.start_with?('cnode')
     category_name = 'cnode'
     summary_category_name = 'summary-cnode'
-  elsif client_fqdn.start_with?("snode")
+  elsif client_fqdn.start_with?('snode')
     category_name = 'snode'
     summary_category_name = 'summary-snode'
-  elsif client_fqdn.start_with?("mnode")
+  elsif client_fqdn.start_with?('mnode')
     category_name = 'mnode'
     summary_category_name = 'summary-mnode'
   else
@@ -81,19 +82,19 @@ client_nodes.each do |client|
   gdash_dashboard_component 'cpu' do
     dashboard_name client_fqdn
     dashboard_category category_name
-    title "CPU"
+    title 'CPU'
     fields(
-      :iowait => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
-        :alias => 'IO Wait'
+      iowait: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
+        alias: 'IO Wait'
       },
-      :system => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
-        :alias => 'system'
+      system: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
+        alias: 'system'
       },
-      :user => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-user.value))",
-        :alias => 'user'
+      user: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-user.value))",
+        alias: 'user'
       }
     )
   end
@@ -101,19 +102,19 @@ client_nodes.each do |client|
   gdash_dashboard_component 'load' do
     dashboard_name client_fqdn
     dashboard_category category_name
-    title "Load"
+    title 'Load'
     fields(
-      :shortterm => {
-        :data => "#{client_name}.load.load.shortterm",
-        :alias => 'shortterm'
+      shortterm: {
+        data: "#{client_name}.load.load.shortterm",
+        alias: 'shortterm'
       },
-      :midterm => {
-        :data => "#{client_name}.load.load.midterm",
-        :alias => 'midterm'
+      midterm: {
+        data: "#{client_name}.load.load.midterm",
+        alias: 'midterm'
       },
-      :longterm => {
-        :data => "#{client_name}.load.load.longterm",
-        :alias => 'longterm'
+      longterm: {
+        data: "#{client_name}.load.load.longterm",
+        alias: 'longterm'
       }
     )
   end
@@ -121,13 +122,14 @@ client_nodes.each do |client|
   gdash_dashboard_component 'memory' do
     dashboard_name client_fqdn
     dashboard_category category_name
-    title "Memory"
+    title 'Memory'
     ymin 0
     ymax 100
     fields(
-      :used => {
-        :data => "asPercent(#{client_name}.memory.memory-used.value, #{client_memory_total * 1000})",
-        :alias => 'used'
+      used: {
+        data: "asPercent(#{client_name}.memory.memory-used.value,
+          #{client_memory_total * 1000})",
+        alias: 'used'
       }
     )
   end
@@ -135,13 +137,14 @@ client_nodes.each do |client|
   gdash_dashboard_component 'filesystem' do
     dashboard_name client_fqdn
     dashboard_category category_name
-    title "Filesystem"
+    title 'Filesystem'
     ymin 0
     ymax 100
     fields(
-      :root_used => {
-        :data => "asPercent(#{client_name}.df-root.df_complex-used.value, #{root_vol_size * 1000})",
-        :alias => 'root_used'
+      root_used: {
+        data: "asPercent(#{client_name}.df-root.df_complex-used.value,
+          #{root_vol_size * 1000})",
+        alias: 'root_used'
       }
     )
   end
@@ -155,17 +158,17 @@ client_nodes.each do |client|
     dashboard_category summary_category_name
     title client_fqdn
     fields(
-      :iowait => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
-        :alias => 'IO Wait'
+      iowait: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
+        alias: 'IO Wait'
       },
-      :system => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
-        :alias => 'system'
+      system: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
+        alias: 'system'
       },
-      :user => {
-        :data => "stacked(averageSeries(#{client_name}.cpu-*.cpu-user.value))",
-        :alias => 'user'
+      user: {
+        data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-user.value))",
+        alias: 'user'
       }
     )
   end
@@ -175,17 +178,17 @@ client_nodes.each do |client|
     dashboard_category summary_category_name
     title client_fqdn
     fields(
-      :shortterm => {
-        :data => "#{client_name}.load.load.shortterm",
-        :alias => 'shortterm'
+      shortterm: {
+        data: "#{client_name}.load.load.shortterm",
+        alias: 'shortterm'
       },
-      :midterm => {
-        :data => "#{client_name}.load.load.midterm",
-        :alias => 'midterm'
+      midterm: {
+        data: "#{client_name}.load.load.midterm",
+        alias: 'midterm'
       },
-      :longterm => {
-        :data => "#{client_name}.load.load.longterm",
-        :alias => 'longterm'
+      longterm: {
+        data: "#{client_name}.load.load.longterm",
+        alias: 'longterm'
       }
     )
   end
@@ -197,9 +200,10 @@ client_nodes.each do |client|
     ymin 0
     ymax 100
     fields(
-      :used => {
-        :data => "asPercent(#{client_name}.memory.memory-used.value, #{client_memory_total * 1000})",
-        :alias => 'used'
+      used: {
+        data: "asPercent(#{client_name}.memory.memory-used.value,
+          #{client_memory_total * 1000})",
+        alias: 'used'
       }
     )
   end
@@ -211,9 +215,10 @@ client_nodes.each do |client|
     ymin 0
     ymax 100
     fields(
-      :root_used => {
-        :data => "asPercent(#{client_name}.df-root.df_complex-used.value, #{root_vol_size * 1000})",
-        :alias => 'root_used'
+      root_used: {
+        data: "asPercent(#{client_name}.df-root.df_complex-used.value,
+          #{root_vol_size * 1000})",
+        alias: 'root_used'
       }
     )
   end
