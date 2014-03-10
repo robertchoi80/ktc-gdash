@@ -28,7 +28,7 @@ root_vol_size = 0
 # Create summary dashboards #
 #############################
 %w(cnode mnode management-vm).each do |sum_category|
-  %w(cpu load memory filesystem).each do |metric|
+  %w(cpu load memory filesystem disk).each do |metric|
     gdash_dashboard metric do
       category "summary-#{sum_category}"
       description metric
@@ -154,6 +154,23 @@ client_nodes.each do |client|
     )
   end
 
+  gdash_dashboard_component 'disk' do
+    dashboard_name client_fqdn
+    dashboard_category category_name
+    title 'Disk'
+    fields(
+      read: {
+        data: "#{client_name}.disk-dm-0.disk_ops.read",
+        alias: 'read'
+      },
+      write: {
+        data: "#{client_name}.disk-dm-0.disk_ops.write",
+        alias: 'write'
+      }
+    )
+  end
+
+
   ########################################
   # Add graphs to the summary dashboards #
   ########################################
@@ -194,6 +211,22 @@ client_nodes.each do |client|
       longterm: {
         data: "#{client_name}.load.load.longterm",
         alias: 'longterm'
+      }
+    )
+  end
+
+  gdash_dashboard_component client_fqdn do
+    dashboard_name 'disk'
+    dashboard_category summary_category_name
+    title client_fqdn
+    fields(
+      read: {
+        data: "#{client_name}.disk-dm-0.disk_ops.read",
+        alias: 'read'
+      },
+      write: {
+        data: "#{client_name}.disk-dm-0.disk_ops.write",
+        alias: 'write'
       }
     )
   end
