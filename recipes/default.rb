@@ -86,7 +86,7 @@ client_nodes.each do |client|
     fields(
       iowait: {
         data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
-        alias: 'IO Wait'
+        alias: 'IO_Wait'
       },
       system: {
         data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
@@ -130,6 +130,11 @@ client_nodes.each do |client|
         data: "asPercent(#{client_name}.memory.memory-used.value,
           #{client_memory_total * 1000})",
         alias: 'used'
+      },
+      cached: {
+        data: "asPercent(#{client_name}.memory.memory-cached.value,
+          #{client_memory_total * 1000})",
+        alias: 'cached'
       }
     )
   end
@@ -160,7 +165,7 @@ client_nodes.each do |client|
     fields(
       iowait: {
         data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-wait.value))",
-        alias: 'IO Wait'
+        alias: 'IO_Wait'
       },
       system: {
         data: "stacked(averageSeries(#{client_name}.cpu-*.cpu-system.value))",
@@ -204,6 +209,11 @@ client_nodes.each do |client|
         data: "asPercent(#{client_name}.memory.memory-used.value,
           #{client_memory_total * 1000})",
         alias: 'used'
+      },
+      cached: {
+        data: "asPercent(#{client_name}.memory.memory-cached.value,
+          #{client_memory_total * 1000})",
+        alias: 'cached'
       }
     )
   end
