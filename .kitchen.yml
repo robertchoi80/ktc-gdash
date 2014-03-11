@@ -18,11 +18,11 @@ suites:
     - recipe[ktc-testing]
     - recipe[etcd::compile_time]
     - recipe[ktc-graphite::master]
-    - recipe[collectd::server]
-    - recipe[ktc-collectd::client_graphite]
     - recipe[ktc-gdash::default]
   attributes:
     ha_disabled: true
     etcd:
+      addr: 127.0.0.1
+      peer_addr: 127.0.0.1
       servers:
-        - localhost
+        - 127.0.0.1
