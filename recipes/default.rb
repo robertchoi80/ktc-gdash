@@ -24,11 +24,11 @@ category_name = ''
 summary_category_name = ''
 root_vol_size = 0
 
-#############################
-# Create summary dashboards #
-#############################
+########################################
+# Create summary dashboards in advance #
+########################################
 %w(cnode mnode management-vm).each do |sum_category|
-  %w(cpu load memory filesystem disk).each do |metric|
+  %w(cpu load memory filesystem disk network).each do |metric|
     gdash_dashboard metric do
       category "summary-#{sum_category}"
       description metric
@@ -36,10 +36,15 @@ root_vol_size = 0
   end
 end
 
+################################
+# Iterate over all nodes found #
+################################
 client_nodes.each do |client|
   client_fqdn = client['fqdn']
-  client_memory_total = client['memory']['total'].to_i
   next if client_fqdn.nil?
+
+  # Get total memory size from node attribute
+  client_memory_total = client['memory']['total'].to_i
 
   # Get root volume size from node attribute
   client['filesystem'].each do |fs, value|
@@ -161,15 +166,30 @@ client_nodes.each do |client|
     fields(
       read: {
         data: "#{client_name}.disk-dm-0.disk_ops.read",
-        alias: 'read'
+        alias: 'disk_ops_read'
       },
       write: {
         data: "#{client_name}.disk-dm-0.disk_ops.write",
-        alias: 'write'
+        alias: 'disk_ops_write'
       }
     )
   end
 
+  gdash_dashboard_component 'network' do
+    dashboard_name client_fqdn
+    dashboard_category category_name
+    title 'Network'
+    fields(
+      rx: {
+        data: "#{client_name}.interface-eth0.if_octets.rx",
+        alias: 'eth0_octets_rx'
+      },
+      tx: {
+        data: "#{client_name}.interface-eth0.if_octets.tx",
+        alias: 'eth0_octets_tx'
+      }
+    )
+  end
 
   ########################################
   # Add graphs to the summary dashboards #
@@ -222,11 +242,27 @@ client_nodes.each do |client|
     fields(
       read: {
         data: "#{client_name}.disk-dm-0.disk_ops.read",
-        alias: 'read'
+        alias: 'disk_ops_read'
       },
       write: {
         data: "#{client_name}.disk-dm-0.disk_ops.write",
-        alias: 'write'
+        alias: 'disk_ops_write'
+      }
+    )
+  end
+
+  gdash_dashboard_component client_fqdn do
+    dashboard_name 'network'
+    dashboard_category summary_category_name
+    title client_fqdn
+    fields(
+      rx: {
+        data: "#{client_name}.interface-eth0.if_octets.rx",
+        alias: 'eth0_octets_rx'
+      },
+      tx: {
+        data: "#{client_name}.interface-eth0.if_octets.tx",
+        alias: 'eth0_octets_tx'
       }
     )
   end
@@ -265,4 +301,5 @@ client_nodes.each do |client|
       }
     )
   end
+
 end
